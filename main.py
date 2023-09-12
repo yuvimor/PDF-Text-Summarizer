@@ -1,6 +1,7 @@
-import streamlit as st
+import streamlit as 
+import nltk
 import pdfplumber
-from nltk.corpus import stopwords
+nltk.download('stopwords')
 from nltk.tokenize import word_tokenize
 
 def summarize_pdf(pdf_file):
