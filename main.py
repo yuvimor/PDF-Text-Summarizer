@@ -1,47 +1,31 @@
 import streamlit as st
-import nltk
 import pdfplumber
-nltk.download('stopwords')
-from nltk.tokenize import word_tokenize
+from transformers import BartTokenizer, BartForConditionalGeneration
 
-def summarize_pdf(pdf_file):
-  """Summarizes the content of a PDF file using NLP.
+# Title
+st.title("Text Analytics with NLP")
 
-  Args:
-    pdf_file: The path to the PDF file to summarize.
+# Upload PDF
+pdf_file = st.file_uploader("Upload a PDF file", type=["pdf"])
 
-  Returns:
-    A summary of the PDF file, as a string.
-  """
+if pdf_file:
+    with pdfplumber.open(pdf_file) as pdf:
+        # Extract text from the PDF
+        pdf_text = ""
+        for page in pdf.pages:
+            pdf_text += page.extract_text()
 
-  pdf_reader = pdfplumber.open(pdf_file)
+        st.subheader("Original PDF Content")
+        st.write(pdf_text)
 
-  # Get all the text in the PDF file.
-  text = ""
-  for page in pdf_reader.pages:
-    text += page.extract_text()
+        # Initialize BART model and tokenizer
+        model = BartForConditionalGeneration.from_pretrained('sshleifer/distilbart-cnn-12-6')
+        tokenizer = BartTokenizer.from_pretrained('sshleifer/distilbart-cnn-12-6')
 
-  # Remove stop words from the text.
-  stop_words = set(stopwords.words("english"))
-  words = word_tokenize(text)
-  filtered_words = [word for word in words if word not in stop_words]
-
-  # Generate a summary of the text.
-  summary = " ".join(filtered_words[:500])
-
-  return summary
-
-def main():
-  """The main function of the Streamlit app."""
-
-  st.title("PDF Text Summarization")
-
-  pdf_file = st.file_uploader("Upload a PDF file:")
-
-  if pdf_file is not None:
-    summary = summarize_pdf(pdf_file)
-    st.write("Summary:")
-    st.write(summary)
-
-if __name__ == "__main__":
-  main()
+        # Tokenize and generate summary
+        inputs = tokenizer([pdf_text], truncation=True, return_tensors='pt')
+        summary_ids = model.generate(inputs['input_ids'], num_beams=4, early_stopping=True, max_length=500)
+        summarized_text = tokenizer.decode(summary_ids[0], skip_special_tokens=True, clean_up_tokenization_spaces=True)
+        
+        st.subheader("Summary")
+        st.write(summarized_text)
