@@ -13,7 +13,7 @@ def summarize_pdf(pdf_file):
     A summary of the PDF file, as a string.
   """
 
-  pdf_reader = PyPDF2.PdfFileReader(pdf_file)
+  pdf_reader = PyPDF2.PdfReader(pdf_file)
 
   text = pdf_reader.get_text()
 
