@@ -1,4 +1,4 @@
-import streamlit as 
+import streamlit as st
 import nltk
 import pdfplumber
 nltk.download('stopwords')
