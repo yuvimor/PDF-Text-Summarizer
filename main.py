@@ -1,5 +1,5 @@
 import streamlit as st
-import pdftotext
+import PyPDF2
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 
@@ -13,12 +13,13 @@ def summarize_pdf(pdf_file):
     A summary of the PDF file, as a string.
   """
 
-  with open(pdf_file, "rb") as f:
-    pdf_text = pdftotext.PDF(f)
+  pdf_reader = PyPDF2.PdfFileReader(pdf_file)
+
+  text = pdf_reader.get_text()
 
   # Remove stop words from the text.
   stop_words = set(stopwords.words("english"))
-  words = word_tokenize(pdf_text)
+  words = word_tokenize(text)
   filtered_words = [word for word in words if word not in stop_words]
 
   # Generate a summary of the text.
