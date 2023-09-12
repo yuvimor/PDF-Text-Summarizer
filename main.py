@@ -1,8 +1,10 @@
 import streamlit as st
 import pdftotext
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
 
 def summarize_pdf(pdf_file):
-  """Summarizes the content of a PDF file.
+  """Summarizes the content of a PDF file using NLP.
 
   Args:
     pdf_file: The path to the PDF file to summarize.
@@ -14,11 +16,15 @@ def summarize_pdf(pdf_file):
   with open(pdf_file, "rb") as f:
     pdf_text = pdftotext.PDF(f)
 
-  summary = ""
-  for sentence in pdf_text:
-    summary += sentence + " "
+  # Remove stop words from the text.
+  stop_words = set(stopwords.words("english"))
+  words = word_tokenize(pdf_text)
+  filtered_words = [word for word in words if word not in stop_words]
 
-  return summary[:500]
+  # Generate a summary of the text.
+  summary = " ".join(filtered_words[:500])
+
+  return summary
 
 def main():
   """The main function of the Streamlit app."""
