@@ -3,7 +3,7 @@ import pdfplumber
 from transformers import BartTokenizer, BartForConditionalGeneration
 
 # Title
-st.title("PDF Text Summarizer using NLP")
+st.title("PDF Text Summarizer")
 
 # Upload PDF
 pdf_file = st.file_uploader("Upload a PDF file", type=["pdf"])
