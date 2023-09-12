@@ -19,10 +19,10 @@ if pdf_file:
         model = BartForConditionalGeneration.from_pretrained('sshleifer/distilbart-cnn-12-6')
         tokenizer = BartTokenizer.from_pretrained('sshleifer/distilbart-cnn-12-6')
 
-        # Tokenize and generate summary
+        # Tokenize and generate summary with a maximum of 500 words
         inputs = tokenizer([pdf_text], truncation=True, return_tensors='pt')
-        summary_ids = model.generate(inputs['input_ids'], num_beams=4, early_stopping=True, max_length=500)
+        summary_ids = model.generate(inputs['input_ids'], num_beams=4, early_stopping=True, max_length=500)  # Set max_length to 500
         summarized_text = tokenizer.decode(summary_ids[0], skip_special_tokens=True, clean_up_tokenization_spaces=True)
-        
+
         st.subheader("Summary")
         st.write(summarized_text)
