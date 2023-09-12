@@ -1,4 +1,4 @@
 streamlit
 pdfplumber
-PyTorch
+torch
 transformers
