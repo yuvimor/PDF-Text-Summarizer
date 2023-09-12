@@ -15,7 +15,7 @@ def summarize_pdf(pdf_file):
 
   pdf_reader = PyPDF2.PdfReader(pdf_file)
 
-  text = pdf_reader.get_text()
+  text = pdf_reader.extract_text()
 
   # Remove stop words from the text.
   stop_words = set(stopwords.words("english"))
