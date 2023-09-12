@@ -3,7 +3,7 @@ import pdfplumber
 from transformers import BartTokenizer, BartForConditionalGeneration
 
 # Title
-st.title("Text Analytics with NLP")
+st.title("PDF Text Summarizer using NLP")
 
 # Upload PDF
 pdf_file = st.file_uploader("Upload a PDF file", type=["pdf"])
@@ -14,9 +14,6 @@ if pdf_file:
         pdf_text = ""
         for page in pdf.pages:
             pdf_text += page.extract_text()
-
-        st.subheader("Original PDF Content")
-        st.write(pdf_text)
 
         # Initialize BART model and tokenizer
         model = BartForConditionalGeneration.from_pretrained('sshleifer/distilbart-cnn-12-6')
